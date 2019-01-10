@@ -14,13 +14,18 @@ Page1::Page1(QWidget *parent)
 	m_networkManager = new QNetworkAccessManager(this);
 
 	connect(ui->searchImages, SIGNAL(clicked(bool)), this, SLOT(slot_sendRequest()));
-	//connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slot_requeseFinished(QNetworkReply *reply)));
 }
 
 
 Page1::~Page1()
 {
 	delete ui;
+
+	if (m_networkManager != Q_NULLPTR)
+	{
+		m_networkManager->deleteLater();
+		m_networkManager = Q_NULLPTR;
+	}
 }
 
 void Page1::slot_sendRequest()
