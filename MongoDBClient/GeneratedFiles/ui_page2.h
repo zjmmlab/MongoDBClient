@@ -18,7 +18,7 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
-#include <QtWidgets/QListView>
+#include <QtWidgets/QListWidget>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QVBoxLayout>
@@ -30,20 +30,20 @@ class Ui_Page2
 {
 public:
     QHBoxLayout *horizontalLayout_3;
-    QLabel *label;
+    QLabel *imageView;
     QVBoxLayout *verticalLayout_3;
     QGroupBox *groupBox;
     QVBoxLayout *verticalLayout;
-    QListView *listView;
+    QListWidget *filePaths;
     QHBoxLayout *horizontalLayout;
-    QPushButton *pushButton;
-    QPushButton *pushButton_2;
+    QPushButton *open;
+    QPushButton *upload;
     QGroupBox *groupBox_2;
     QVBoxLayout *verticalLayout_2;
-    QLineEdit *lineEdit;
+    QLineEdit *downloadUrl;
     QHBoxLayout *horizontalLayout_2;
     QSpacerItem *horizontalSpacer;
-    QPushButton *pushButton_3;
+    QPushButton *download;
     QSpacerItem *verticalSpacer;
 
     void setupUi(QWidget *Page2)
@@ -53,17 +53,18 @@ public:
         Page2->resize(1143, 759);
         horizontalLayout_3 = new QHBoxLayout(Page2);
         horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
-        label = new QLabel(Page2);
-        label->setObjectName(QStringLiteral("label"));
+        imageView = new QLabel(Page2);
+        imageView->setObjectName(QStringLiteral("imageView"));
         QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
-        label->setSizePolicy(sizePolicy);
-        label->setMinimumSize(QSize(800, 600));
-        label->setFrameShape(QFrame::Box);
+        sizePolicy.setHeightForWidth(imageView->sizePolicy().hasHeightForWidth());
+        imageView->setSizePolicy(sizePolicy);
+        imageView->setMinimumSize(QSize(800, 600));
+        imageView->setFrameShape(QFrame::Box);
+        imageView->setAlignment(Qt::AlignCenter);
 
-        horizontalLayout_3->addWidget(label);
+        horizontalLayout_3->addWidget(imageView);
 
         verticalLayout_3 = new QVBoxLayout();
         verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
@@ -77,22 +78,22 @@ public:
         groupBox->setMinimumSize(QSize(276, 0));
         verticalLayout = new QVBoxLayout(groupBox);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-        listView = new QListView(groupBox);
-        listView->setObjectName(QStringLiteral("listView"));
+        filePaths = new QListWidget(groupBox);
+        filePaths->setObjectName(QStringLiteral("filePaths"));
 
-        verticalLayout->addWidget(listView);
+        verticalLayout->addWidget(filePaths);
 
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
-        pushButton = new QPushButton(groupBox);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
+        open = new QPushButton(groupBox);
+        open->setObjectName(QStringLiteral("open"));
 
-        horizontalLayout->addWidget(pushButton);
+        horizontalLayout->addWidget(open);
 
-        pushButton_2 = new QPushButton(groupBox);
-        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
+        upload = new QPushButton(groupBox);
+        upload->setObjectName(QStringLiteral("upload"));
 
-        horizontalLayout->addWidget(pushButton_2);
+        horizontalLayout->addWidget(upload);
 
 
         verticalLayout->addLayout(horizontalLayout);
@@ -107,10 +108,10 @@ public:
         groupBox_2->setMaximumSize(QSize(276, 16777215));
         verticalLayout_2 = new QVBoxLayout(groupBox_2);
         verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
-        lineEdit = new QLineEdit(groupBox_2);
-        lineEdit->setObjectName(QStringLiteral("lineEdit"));
+        downloadUrl = new QLineEdit(groupBox_2);
+        downloadUrl->setObjectName(QStringLiteral("downloadUrl"));
 
-        verticalLayout_2->addWidget(lineEdit);
+        verticalLayout_2->addWidget(downloadUrl);
 
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
@@ -118,11 +119,11 @@ public:
 
         horizontalLayout_2->addItem(horizontalSpacer);
 
-        pushButton_3 = new QPushButton(groupBox_2);
-        pushButton_3->setObjectName(QStringLiteral("pushButton_3"));
-        pushButton_3->setMaximumSize(QSize(120, 16777215));
+        download = new QPushButton(groupBox_2);
+        download->setObjectName(QStringLiteral("download"));
+        download->setMaximumSize(QSize(120, 16777215));
 
-        horizontalLayout_2->addWidget(pushButton_3);
+        horizontalLayout_2->addWidget(download);
 
 
         verticalLayout_2->addLayout(horizontalLayout_2);
@@ -146,12 +147,12 @@ public:
     void retranslateUi(QWidget *Page2)
     {
         Page2->setWindowTitle(QApplication::translate("Page2", "Form", Q_NULLPTR));
-        label->setText(QApplication::translate("Page2", "TextLabel", Q_NULLPTR));
+        imageView->setText(QApplication::translate("Page2", "Show Image", Q_NULLPTR));
         groupBox->setTitle(QApplication::translate("Page2", "Upload", Q_NULLPTR));
-        pushButton->setText(QApplication::translate("Page2", "PushButton", Q_NULLPTR));
-        pushButton_2->setText(QApplication::translate("Page2", "PushButton", Q_NULLPTR));
-        groupBox_2->setTitle(QApplication::translate("Page2", "download", Q_NULLPTR));
-        pushButton_3->setText(QApplication::translate("Page2", "PushButton", Q_NULLPTR));
+        open->setText(QApplication::translate("Page2", "Open ...", Q_NULLPTR));
+        upload->setText(QApplication::translate("Page2", "Upload", Q_NULLPTR));
+        groupBox_2->setTitle(QApplication::translate("Page2", "Download", Q_NULLPTR));
+        download->setText(QApplication::translate("Page2", "Download", Q_NULLPTR));
     } // retranslateUi
 
 };
