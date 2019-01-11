@@ -13,6 +13,7 @@ MongoDBClient::MongoDBClient(QWidget *parent)
 	m_progress = new QProgressBar;
 	m_progress->setTextVisible(true);
 	m_progress->setValue(100);
+	m_progress->hide();
 
 	m_stacked = new QStackedWidget;
 	m_page1 = new Page1;
@@ -24,6 +25,7 @@ MongoDBClient::MongoDBClient(QWidget *parent)
 	hLayout->setSpacing(10);
 	hLayout->setContentsMargins(12, 12, 12, 0);
 	hLayout->addWidget(comboBox);
+	hLayout->addStretch();
 	hLayout->addWidget(m_progress);
 
 	QVBoxLayout *vLayout = new QVBoxLayout();
@@ -46,4 +48,34 @@ MongoDBClient::MongoDBClient(QWidget *parent)
 	}
 
 	connect(comboBox, SIGNAL(currentIndexChanged(int)), m_stacked, SLOT(setCurrentIndex(int)));
+	connect(m_page2, SIGNAL(showProgressBar(bool)), this, SLOT(slot_ShowProgressBar(bool)));
+	connect(m_page2, SIGNAL(doProgress(qint64, qint64)), this, SLOT(slot_doProgress(qint64, qint64)));
+}
+
+void MongoDBClient::slot_ShowProgressBar(bool bShow)
+{
+	if (bShow)
+	{
+		m_progress->setValue(0);
+		m_progress->show();
+
+	}
+	else
+	{		
+		QEventLoop loop;
+		QTimer::singleShot(500, &loop, SLOT(quit()));
+		loop.exec();
+
+		m_progress->hide();
+	}
+}
+
+void MongoDBClient::slot_doProgress(qint64 bytesSent, qint64 bytesTotal)
+{
+	if (bytesTotal > 0)
+	{
+		qDebug() << "loaded" << bytesSent << "of" << bytesTotal;
+		m_progress->setMaximum(100);
+		m_progress->setValue(((double)bytesSent / (double)bytesTotal) * 100);
+	}
 }

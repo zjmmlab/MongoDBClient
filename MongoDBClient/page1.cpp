@@ -12,7 +12,7 @@ Page1::Page1(QWidget *parent)
 	ui->imagesUrl->setText(settings.value("Url/imagesUrl").toString());
 
 	m_networkManager = new QNetworkAccessManager(this);
-	m_loop = new QEventLoop;
+	m_loop = new QEventLoop(this);
 
 	connect(ui->searchImages, SIGNAL(clicked(bool)), this, SLOT(slot_sendRequest()));
 }
@@ -52,6 +52,7 @@ void Page1::slot_requestFinished()
 {
 	if (m_networkReply->error() == QNetworkReply::NoError)
 	{
+		qDebug() << "request finished, get images info from http server.";
 		QByteArray bytes = m_networkReply->readAll();
 		QJsonDocument doc = QJsonDocument::fromJson(bytes);
 		ui->resultJson->setText(doc.toJson());
