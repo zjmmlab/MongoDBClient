@@ -12,6 +12,7 @@ Page1::Page1(QWidget *parent)
 	ui->imagesUrl->setText(settings.value("Url/imagesUrl").toString());
 
 	m_networkManager = new QNetworkAccessManager(this);
+	m_loop = new QEventLoop;
 
 	connect(ui->searchImages, SIGNAL(clicked(bool)), this, SLOT(slot_sendRequest()));
 }
@@ -26,6 +27,12 @@ Page1::~Page1()
 		m_networkManager->deleteLater();
 		m_networkManager = Q_NULLPTR;
 	}
+
+	if (m_loop != Q_NULLPTR)
+	{
+		delete m_loop;
+		m_loop = Q_NULLPTR;
+	}
 }
 
 void Page1::slot_sendRequest()
@@ -38,6 +45,7 @@ void Page1::slot_sendRequest()
 	request.setUrl(QUrl(ui->imagesUrl->text()));
 	m_networkReply = m_networkManager->get(request);
 	connect(m_networkReply, SIGNAL(finished()), this, SLOT(slot_requestFinished()));
+	m_loop->exec();
 }
 
 void Page1::slot_requestFinished()
@@ -50,10 +58,9 @@ void Page1::slot_requestFinished()
 	}	
 	else
 	{
-		// handle errors here  
+		QMessageBox::critical(NULL, tr("Error"), "Failed!");
 	}
 
-	// We receive ownership of the reply object  
-	// and therefore need to handle deletion.  
 	m_networkReply->deleteLater();
+	m_loop->exit();
 }

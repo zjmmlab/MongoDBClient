@@ -20,5 +20,6 @@ private:
 	Ui::Page1 *ui;
 	QNetworkAccessManager *m_networkManager;
 	QNetworkReply *m_networkReply;
+	QEventLoop *m_loop;
 };
 
