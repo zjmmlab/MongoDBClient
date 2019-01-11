@@ -5,7 +5,6 @@
 Page2::Page2(QWidget *parent)
 	: QWidget(parent)
 	, ui(new Ui::Page2)
-	, m_filePath("")
 {
 	ui->setupUi(this);
 
@@ -47,41 +46,45 @@ Page2::~Page2()
 
 void Page2::slot_loadFiles()
 {
-	m_filePath = QFileDialog::getOpenFileName(this,
-		tr("Open Image"),
+	m_filePaths = QFileDialog::getOpenFileNames(this,
+		tr("Select one or more files to open"),
 		"",
 		tr("Image Files (*.png *.jpg *.bmp);; All files (*.*)"));
 
-	ui->filePaths->addItem(m_filePath);
-
+	ui->filePaths->addItems(m_filePaths);
 }
 
 void Page2::slot_sendUploadRequest()
 {
-	if (m_filePath.isEmpty()) return;
+	if (m_filePaths.length() < 1) return;
 
 	QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
 
 	QHttpPart textPart;
 	textPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"desc\""));	
 	textPart.setBody(ui->description->text().toUtf8());
-
-	m_file = new QFile(m_filePath);
-	m_file->open(QIODevice::ReadOnly);
-
-	QHttpPart imagePart;
-	imagePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/jpeg"));
-	QString disposition("form-data; name=\"image\"; filename=\"" + m_file->fileName() + "\"");
-	imagePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant(disposition));
-	
-	imagePart.setBodyDevice(m_file);
-	m_file->setParent(multiPart);
-
 	multiPart->append(textPart);
-	multiPart->append(imagePart);
+
+	for (int i = 0; i < m_filePaths.length(); i++) {
+		
+		qDebug("UploadFileList [%d] [%s]", i, m_filePaths[i].toStdString().c_str());
+		
+		QFile *file = new QFile(m_filePaths[i]);
+
+		QHttpPart imagePart;
+		imagePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/jpeg"));
+		QString disposition("form-data; name=\"image\"; filename=\"" + file->fileName() + "\"");
+		imagePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant(disposition));
+
+		file->open(QIODevice::ReadOnly);
+		imagePart.setBodyDevice(file);
+		file->setParent(multiPart);
+
+		multiPart->append(imagePart);
+	}	
 
 	QSettings settings(QDir::currentPath() + "/Config.ini", QSettings::IniFormat);
-	QUrl url(settings.value("Url/imagesUrl").toString());
+	QUrl url(settings.value("Url/UploadMultiFilesUrl").toString());
 	QNetworkRequest request(url);
 	m_uploadReply = m_networkManager->post(request, multiPart);
 	multiPart->setParent(m_uploadReply);
@@ -97,15 +100,13 @@ void Page2::slot_sendUploadRequest()
 void Page2::slot_uploadFinished()
 {
 	if (m_uploadReply->error() == QNetworkReply::NoError) {
-		qDebug() << "upload finished";
-		m_file->flush();
-		m_file->close();
+		qDebug() << "upload finished";		
 		m_uploadReply->deleteLater();
-		m_uploadReply = NULL;
-		delete m_file;
-		m_file = NULL;		
+		m_uploadReply = NULL;		
 		m_loop->exit();
 		emit showProgressBar(false);
+		m_filePaths.clear();
+		ui->filePaths->clear();
 	}
 	else
 	{

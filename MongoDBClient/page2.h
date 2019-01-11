@@ -36,6 +36,6 @@ private:
 	QNetworkReply *m_downloadReply;
 	QNetworkReply *m_deleteReply;
 	QFile *m_file;
-	QString m_filePath;
+	QStringList m_filePaths;
 	QEventLoop *m_loop;
 };
